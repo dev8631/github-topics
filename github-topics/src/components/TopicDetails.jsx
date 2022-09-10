@@ -1,35 +1,19 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-import { gql, useQuery } from "@apollo/client";
 import { Box, Typography } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import Loader from "./Loader";
+import useTopicDetails from "./../hooks/useTopicDetails";
+import Loader from "./reuseable/Loader";
 
-const getTopic = gql`
-  query GetTopic($topic: String!) {
-    topic(name: $topic) {
-      id
-      name
-      stargazerCount
-      relatedTopics(first: 10) {
-        id
-        name
-        stargazerCount
-      }
-    }
-  }
-`;
 export default function TopicDetails() {
   let params = useParams();
-  const { data, loading, error } = useQuery(getTopic, {
-    variables: { topic: params.topic },
-  });
-  // console.log(params, data);
+  const { data, loading, error } = useTopicDetails(params.topic);
+
   if (!loading && data.topic !== null) {
     return (
-      <Box sx={{ mt: 2 }}>
+      <Box sx={{ mt: 2 }} data-testid="topicDetails">
         <Typography variant="subtitle1">
           Topic Name: <strong>{data.topic.name}</strong>
         </Typography>
@@ -62,7 +46,7 @@ export default function TopicDetails() {
 
   if (data?.topic === null) {
     return (
-      <Box sx={{ mt: 2 }}>
+      <Box sx={{ mt: 2 }} data-testid="error">
         <Typography variant="h6"> No Details found :(</Typography>
         <Link to="/">Go to Home</Link>
       </Box>
