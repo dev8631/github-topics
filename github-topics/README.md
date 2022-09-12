@@ -1,6 +1,29 @@
-# Getting Started with Create React App
+## Dev Notes
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+1. Please set REACT_APP_GITHUB_API_TOKEN in .env file
+2. Run "npm install" to install dependencies
+3. Run "npm start" to start application
+4. Run "npm run test" to test the app.
+
+### Future Improvements
+
+- Code Structuring:
+
+  1. We have ApolloProvider -> src/index.js
+  2. Router -> src/App.js
+     2.a. We have app layout on "/" route
+     2.b. "/" route will serve all topics
+     2.c. "/:topic" will serve a single topic details
+  3. Comoponents -> src/components/
+  4. Reusable Comoponents -> src/components/reuseable/
+
+- Refactoring:
+
+  1. We can refactor routes into modules
+  2. We can refactor components folder structure according to module
+
+- Additional Features:
+  1. Search can be accessed globally
 
 ## Available Scripts
 

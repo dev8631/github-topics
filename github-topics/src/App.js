@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
 import TopicLists from './components/TopicLists';
 import TopicDetails from './components/TopicDetails';
-import Layout from './components/Layout';
+import Layout from './components/reuseable/Layout';
 
 
 function App() {
