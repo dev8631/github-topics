@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { MockedProvider } from "@apollo/client/testing";
+import '@testing-library/jest-dom'
 import { BrowserRouter } from 'react-router-dom'
 import TopicDetails from './TopicDetails';
 import { getTopic } from '../hooks/useTopicDetails';
@@ -63,7 +64,7 @@ let mockData = {
     }
 }
 
-const renderWithRouter = (ui, { route = '/react' } = {}) => {
+const renderWithRouter = async (ui, { route = '/react' } = {}) => {
     window.history.pushState({}, 'Test page', route)
 
     return {
@@ -71,15 +72,54 @@ const renderWithRouter = (ui, { route = '/react' } = {}) => {
     }
 }
 
-test('renders TopicDetails component', async () => {
-    const mocks = [{
-        request: {
-            query: getTopic,
-            variables: { topic: 'react' }
-        },
-        result: mockData
-    }]
-    renderWithRouter(<MockedProvider mocks={mocks} addTypename={false}><TopicDetails /></MockedProvider>);
-    expect(screen.getByTestId('loader')).toBeInTheDocument();
+describe('Loader', () => {
+    it('renders TopicDetails component loader onmount', () => {
+        const mocks = [{
+            request: {
+                query: getTopic,
+                variables: { topic: 'react' }
+            },
+            result: {
+                data: mockData
+            }
+        }]
+        renderWithRouter(<MockedProvider mocks={mocks} addTypename={false}><TopicDetails /></MockedProvider>);
+        expect(screen.getByTestId('loader')).toBeInTheDocument();
+    })
 
-});
+    it('renders TopicDetails component with data', async () => {
+        const mocks = [{
+            request: {
+                query: getTopic,
+                variables: { topic: 'error' }
+            },
+            result: {
+                data: mockData
+            }
+        }]
+        renderWithRouter(<MockedProvider mocks={mocks} addTypename={false}><TopicDetails /></MockedProvider>);
+        setTimeout(() => {
+            const textEle = screen.getByTestId("nodejs")
+            expect(textEle).toBeInTheDocument();
+        }, 1000);
+
+    })
+
+    it('renders TopicDetails component with error', async () => {
+        const mocks = [{
+            request: {
+                query: getTopic,
+                variables: { topic: 'error' }
+            },
+            result: {
+                errors: new Error("An error occurred")
+            }
+        }]
+        renderWithRouter(<MockedProvider mocks={mocks} addTypename={false}><TopicDetails /></MockedProvider>);
+        setTimeout(() => {
+            const textEle = screen.getByText("An error occurred")
+            expect(textEle).toBeInTheDocument();
+        }, 1000);
+
+    })
+})
